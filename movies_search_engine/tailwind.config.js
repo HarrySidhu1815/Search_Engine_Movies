@@ -11,6 +11,9 @@ module.exports = {
         background: "var(--background)",
         foreground: "var(--foreground)",
       },
+        height: {
+          '376': 'calc(100vh - 6rem)',
+        }
     },
   },
   plugins: [],
