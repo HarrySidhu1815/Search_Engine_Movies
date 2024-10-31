@@ -1,7 +1,8 @@
 import FilterPanel from '@/components/filter-panel'
+import MovieData from '@/components/movies'
 import React from 'react'
 
-export default function page() {
+export default function SearchPage() {
   return (
     <div className='flex flex-row'>
         <FilterPanel />
@@ -10,7 +11,7 @@ export default function page() {
         <div className='w-3/4'>
             <input className='w-full border px-8 py-2 border-black bg-slate-50'  type='text' name='movie' placeholder='Search Movie with title'/>
         </div>
-       
+       <MovieData />
       </div>
     </div>
   )

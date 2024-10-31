@@ -5,7 +5,7 @@ import logoImg from '@/assets/logo.svg'
 
 export default function MainHeader() {
   return (
-    <header className='h-24 bg-slate-300 flex flex-row justify-between px-8 items-center py-4'>
+    <header className='h-24 bg-slate-300 flex flex-row justify-between px-8 items-center py-4 sticky top-0'>
         <Link href='/' className='flex flex-row items-center gap-6'>
             <Image width={75} height={75} src={logoImg} alt='Movie Logo' priority/>
             <h2 className='text-3xl font-bold'>Movie Finder</h2>
