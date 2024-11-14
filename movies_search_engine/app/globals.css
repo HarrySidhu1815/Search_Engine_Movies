@@ -20,3 +20,45 @@ body {
   font-family: Arial, Helvetica, sans-serif;
   background-color: #ffffff;
 }
+
+/* About Page Styling */
+.about-page {
+  padding: 2rem;
+  color: var(--background);
+  background-color: var(--foreground);
+}
+
+.about-page h1 {
+  @apply text-4xl font-bold mb-6 text-center text-slate-200;
+}
+
+.about-page h2 {
+  @apply text-2xl font-semibold mb-4 text-slate-700;
+}
+
+.about-page p {
+  @apply text-lg leading-relaxed mb-8;
+}
+
+/* Section Background and Layout */
+.about-page .section-container {
+  @apply bg-slate-100 p-8 rounded-xl shadow-lg mb-6;
+}
+
+.about-page .highlight {
+  @apply text-center text-xl mb-8 text-slate-800;
+  line-height: 1.8; 
+}
+
+/* List Styling */
+.about-page ul {
+  @apply list-disc list-inside text-lg text-gray-600 pl-4 mb-8;
+}
+
+.about-page ul li {
+  @apply mb-2;
+}
+
+.about-page ul li strong {
+  @apply text-gray-800;
+}

@@ -3,6 +3,8 @@ import DropArrow from './icons/DropArrow'
 
 export default function FilterCategory({filter}) {
     const [showFilters, setShowFilters] = useState(false)
+    let options = []
+    
   return (
     <>
     <div onClick={() => {setShowFilters(!showFilters)}} className='flex font-medium flex-row justify-between cursor-pointer mb-2 px-4 text-xl hover:bg-slate-100'>
