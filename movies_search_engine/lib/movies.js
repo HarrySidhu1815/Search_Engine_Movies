@@ -1,4 +1,6 @@
-export function getAllGenres(data){
+import { moviesData } from './Movie_Data.movies';
+
+export function getAllGenres(moviesData){
     const genreSet = new Set();
     
     data.forEach(item => {
