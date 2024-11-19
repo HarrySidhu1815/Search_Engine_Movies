@@ -8,6 +8,7 @@ export default function SearchPage() {
   const [movies, setMovies] = useState([])
   const [allMovies, setAllMovies] = useState([])
   const [searchValue, setSearchValue] = useState('')
+  const [sortOption, setSortOption] = useState('')
   const [selectedFilters, setSelectedFilters] = useState({
     Genres: [],
     Type: [],
@@ -45,7 +46,7 @@ export default function SearchPage() {
       fetchAllMovies()
   }, [])
 
-    function filterMovies(query = '', filters = selectedFilters) {
+    function filterMovies(query = '', filters = selectedFilters, sort = sortOption) {
       let filteredMovies = allMovies
   
       if (query.trim() !== "") {
@@ -71,6 +72,8 @@ export default function SearchPage() {
             filteredMovies = filteredMovies.filter((movie) =>
               options.some((range) => {
                 const releaseYear = parseInt(movie.releaseYear, 10)
+                // If the string cannot be fully converted to a number, parseInt will return only the integer part (if any).
+                // If the string cannot be interpreted as a number, it will return NaN (Not a Number).
                 if (range === "< 1950") return releaseYear < 1950
                 if (range === "1951 - 1960") return releaseYear >= 1951 && releaseYear <= 1960
                 if (range === "1961 - 1970") return releaseYear >= 1961 && releaseYear <= 1970
@@ -98,7 +101,17 @@ export default function SearchPage() {
           }
         }
       })
-  
+      
+      if (sort) {
+        if (sort === 'Release Date') {
+          filteredMovies.sort((a, b) => parseInt(b.releaseYear) - parseInt(a.releaseYear))
+        } else if (sort === 'Rating') {
+          filteredMovies.sort((a, b) => parseFloat(b.imdbAverageRating) - parseFloat(a.imdbAverageRating))
+        } else if (sort === 'Title') {
+          filteredMovies.sort((a, b) => a.title.localeCompare(b.title))
+        }
+      }
+
       return filteredMovies
     }
   
@@ -118,9 +131,15 @@ export default function SearchPage() {
       setMovies(filteredMovies)
     }
 
+    function handleSortChange(sort) {
+      setSortOption(sort)
+      const filteredMovies = filterMovies(searchValue, selectedFilters, sort)
+      setMovies(filteredMovies)
+    }
+
   return (
     <div className='flex flex-row'>
-        <FilterPanel onFilterChange={handleFilterChange} selectedFilters={selectedFilters}/>
+        <FilterPanel onFilterChange={handleFilterChange} selectedFilters={selectedFilters} onSortChange={handleSortChange} sortOption={sortOption}/>
       <div className='w-4/5 py-6 flex flex-col items-center'>
         <h1 className='text-center text-3xl mb-4'>Search Movie</h1>
         <div className='w-3/4'>
