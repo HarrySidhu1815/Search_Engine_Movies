@@ -15,7 +15,8 @@ export default function MovieData({movies}) {
     <div className='my-4 flex gap-4 flex-wrap justify-center'>
       {movies.slice(0, totalMovies).map(movie => (<MovieCard key={movie._id} movieData={movie}/>))}
     </div>
-    <div onClick={handleLoadMoreClick} className='text-center hover:cursor-pointer my-8 border-b-2 w-4/5'>Load More</div>
+   {movies.length >= 24 && <div onClick={handleLoadMoreClick} className='text-center hover:cursor-pointer my-8 border-b-2 w-4/5'>Load More</div>}
+   {movies.length === 0 && <h3>No movie found</h3>}
     </>
   )
 }
