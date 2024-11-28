@@ -1,6 +1,7 @@
 "use client"
 
 import FilterPanel from '@/components/filter-panel'
+import Loading from '@/components/loading'
 import MovieData from '@/components/movies'
 import React, { useEffect, useState } from 'react'
 
@@ -16,9 +17,11 @@ export default function SearchPage() {
     Rating: []
   })
 
+  const [isLoading, setIsLoading] = useState(false);
   useEffect(()=> {
     if (typeof window === 'undefined') return;
       async function fetchAllMovies(){
+          setIsLoading(true);
           const response = await fetch('/api/movies')
           const data = await response.json()
 
@@ -28,9 +31,11 @@ export default function SearchPage() {
           }
           setMovies(data)
           setAllMovies(data)
+          setIsLoading(false);
       }
 
       async function fetch100Movies(){
+        setIsLoading(true);
         const response = await fetch('/api/movies/100')
         const data = await response.json()
 
@@ -40,6 +45,7 @@ export default function SearchPage() {
         }
         setMovies(data)
         setAllMovies(data)
+        setIsLoading(false);
       }
 
       fetch100Movies()
@@ -167,6 +173,10 @@ export default function SearchPage() {
       setSortOption(sort)
       const filteredMovies = filterMovies(searchValue, selectedFilters, sort)
       setMovies(filteredMovies)
+    }
+
+    if (isLoading) {
+      return <Loading />
     }
 
   return (
