@@ -46,31 +46,32 @@ export default function SearchPage() {
       fetchAllMovies()
   }, [])
 
-    function filterMovies(query = '', filters = selectedFilters, sort = sortOption) {
-      let filteredMovies = allMovies
-  
-      if (query.trim() !== "") {
-        filteredMovies = filteredMovies.filter((movie) =>
-          movie.title && movie.title.toLowerCase().includes(query.toLowerCase())
-        )
-      }
-  
-      Object.keys(filters).forEach((key) => {
-        const options = filters[key]
-  
-        if (options.length > 0) {
-          if (key === 'Genres') {
-            filteredMovies = filteredMovies.filter((movie) => {
-              const movieGenres = movie.genres ? movie.genres.split(', ') : []
-              return options.some((genre) => movieGenres.includes(genre))
-            })
-          } else if (key === "Type") {
-            filteredMovies = filteredMovies.filter((movie) =>
-              options.includes(movie.type)
-            )
-          } else if (key === "Release Year") {
-            filteredMovies = filteredMovies.filter((movie) =>
-              options.some((range) => {
+    // We will use Mapper-Reducer now to search the movie or apply filter on very big dataset
+
+    // Mapper Phase: Process and filter data in smaller subsets (e.g., filter or sort movies based on criteria).
+    //Reducer Phase: Combine the results of individual subsets to produce the final output (e.g., combine filtered movie lists).
+
+    // STEP 1: Mapper phase: The mapper function can process chunks of the movie dataset based on filters.
+    function mapper(chunk, filters, searchQuery) {
+      return chunk.filter(movie => {
+        let matches = true;
+    
+        // Search Query
+        if (searchQuery && !movie.title.toLowerCase().includes(searchQuery.toLowerCase())) {
+          matches = false;
+        }
+    
+        // Filters
+        Object.keys(filters).forEach(filterKey => {
+          const options = filters[filterKey];
+          if (options.length > 0) {
+            if (filterKey === 'Genres' && movie.genres) {
+              const genres = movie.genres.split(', ');
+              matches = matches && options.some(option => genres.includes(option));
+            } else if (filterKey === 'Type' && movie.type) {
+              matches = matches && options.includes(movie.type);
+            } else if (filterKey === 'Release Year' && movie.releaseYear) {
+              matches = matches && options.some((range) => {
                 const releaseYear = parseInt(movie.releaseYear, 10)
                 // If the string cannot be fully converted to a number, parseInt will return only the integer part (if any).
                 // If the string cannot be interpreted as a number, it will return NaN (Not a Number).
@@ -85,10 +86,8 @@ export default function SearchPage() {
                 if (range === "> 2021") return releaseYear > 2021
                 return false
               })
-            )
-          } else if (key === "Rating") {
-            filteredMovies = filteredMovies.filter((movie) =>
-              options.some((range) => {
+            } else if (filterKey === 'Rating' && movie.imdbAverageRating) {
+              matches = matches && options.some((range) => {
                 const rating = parseFloat(movie.imdbAverageRating)
                 if (range === "< 1.0") return rating < 1.0
                 if (range === "1.0 - 5.0") return rating >= 1.0 && rating <= 5.0
@@ -97,24 +96,57 @@ export default function SearchPage() {
                 if (range === "> 9.0") return rating > 9.0
                 return false
               })
-            )
+            }
           }
+        });
+    
+        return matches;
+      }).sort((a, b) => {
+        // Sorting logic
+        if (sortOption === 'Release Date') {
+          return parseInt(b.releaseYear, 10) - parseInt(a.releaseYear, 10);
+        } else if (sortOption === 'Rating') {
+          return parseFloat(b.imdbAverageRating) - parseFloat(a.imdbAverageRating);
+        } else if (sortOption === 'Title') {
+          return a.title.localeCompare(b.title);
         }
-      })
-      
-      if (sort) {
-        if (sort === 'Release Date') {
-          filteredMovies.sort((a, b) => parseInt(b.releaseYear) - parseInt(a.releaseYear))
-        } else if (sort === 'Rating') {
-          filteredMovies.sort((a, b) => parseFloat(b.imdbAverageRating) - parseFloat(a.imdbAverageRating))
-        } else if (sort === 'Title') {
-          filteredMovies.sort((a, b) => a.title.localeCompare(b.title))
-        }
-      }
-
-      return filteredMovies
+        return 0;
+      });
     }
+
+    function reducer(mappedChunks, sortOption) {
+  const combinedMovies = mappedChunks.flat(); // Combine all filtered movie chunks into a single array.
   
+  // Sorting logic applied after flattening
+  return combinedMovies.sort((a, b) => {
+    if (sortOption === 'Release Date') {
+      return parseInt(b.releaseYear, 10) - parseInt(a.releaseYear, 10);
+    } else if (sortOption === 'Rating') {
+      return parseFloat(b.imdbAverageRating) - parseFloat(a.imdbAverageRating);
+    } else if (sortOption === 'Title') {
+      return a.title.localeCompare(b.title);
+    }
+    return 0;
+  });
+}
+    
+
+    function filterMovies(query = '', filters = selectedFilters, sort = sortOption) {
+      const CHUNK_SIZE = 500; // Adjust based on dataset size.
+      const chunks = [];
+    
+      // Divide the dataset into smaller chunks
+      for (let i = 0; i < allMovies.length; i += CHUNK_SIZE) {
+        chunks.push(allMovies.slice(i, i + CHUNK_SIZE));
+      }
+    
+      // Apply mapper to each chunk
+      const mappedChunks = chunks.map(chunk => mapper(chunk, filters, query));
+    
+      // Use reducer to combine results
+      return reducer(mappedChunks, sort);
+    }
+
     function handleInputChange(e) {
       const value = e.target.value
       setSearchValue(value)
