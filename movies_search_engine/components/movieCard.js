@@ -1,3 +1,4 @@
+// MovieCard component is rsponsible for displaying the movie block on the website
 import Image from 'next/image'
 import React from 'react'
 import netflix from '@/assets/netflix.png'

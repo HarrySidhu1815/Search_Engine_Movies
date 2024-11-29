@@ -1,8 +1,9 @@
-"use client"
+"use client" // This is client side page as it contains the React logic like handler and useState
 
 import React, { useState } from 'react'
 import MovieCard from './movieCard'
 
+// Componenet resposible to display all the movies on the website based on filters ans sorts applied
 export default function MovieData({movies}) {
     const [totalMovies, setTotalMovies] = useState(24)
 

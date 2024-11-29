@@ -1,3 +1,4 @@
+// Practice File 
 import { moviesData } from './Movie_Data.movies';
 
 export function getAllGenres(moviesData){

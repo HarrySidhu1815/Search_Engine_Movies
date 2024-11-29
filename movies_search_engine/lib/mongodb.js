@@ -1,3 +1,4 @@
+// Script to connect to MongoDB Atlas - Cloud database
 import mongoose from 'mongoose';
 const MONGODB_URI = process.env.MONGODB_URI;
 

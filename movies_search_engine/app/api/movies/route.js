@@ -1,3 +1,6 @@
+// API folder is responsible for the server request we do to fetch the data from MOngoDB (in this case)
+// Backend of the website
+// This API request is responsible for fetching the movies data from the MongoDB Atlas
 import { connect } from '@/lib/mongodb';
 import Movie from '@/models/movies';
 

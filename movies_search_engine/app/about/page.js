@@ -1,5 +1,6 @@
 import React from "react";
 
+// This is About Page which is simple static HTML page with Tailwind CSS
 export default function About() {
   return (
     <div className="about-page p-6">

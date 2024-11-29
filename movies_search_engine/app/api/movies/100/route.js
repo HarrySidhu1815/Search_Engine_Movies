@@ -1,3 +1,4 @@
+// This API request is responsible for fetching the first 100 movies data from the MongoDB Atlas
 import { connect } from '@/lib/mongodb';
 import Movie from '@/models/movies';
 

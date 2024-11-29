@@ -1,3 +1,4 @@
+// Component responsible for dislaying loading wheel when the API request is not fulfilled
 export default function Loading() {
   return (
     <div className="w-full h-[50vh] flex justify-center items-center py-20">

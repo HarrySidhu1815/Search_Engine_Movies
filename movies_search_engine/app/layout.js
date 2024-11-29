@@ -13,11 +13,13 @@ const geistMono = localFont({
   weight: "100 900",
 });
 
+// Meta Data for the SEO 
 export const metadata = {
   title: "Movie Search Engine",
   description: "Made by Harjobanpreet Anmoljeet, and Tanisha",
 };
 
+// Layout to make consistent header and different children according to the page selected
 export default function RootLayout({ children }) {
   return (
     <html lang="en">

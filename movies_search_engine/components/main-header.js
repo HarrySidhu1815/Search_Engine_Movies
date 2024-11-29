@@ -3,6 +3,8 @@ import Link from 'next/link'
 import React from 'react'
 import logoImg from '@/assets/logo.svg'
 
+// Header componenet responsible for displaying the navigation options on the website
+// Example - Home, Search-Engine, About
 export default function MainHeader() {
   return (
     <header className='h-24 bg-slate-300 flex flex-row justify-between px-8 items-center py-4 sticky top-0'>
