@@ -4,7 +4,7 @@ import React from "react";
 export default function About() {
   return (
     <div className="about-page p-6">
-      <h1 className="text-4xl font-bold mb-6 text-center">
+      <h1 className="text-4xl font-bold mb-6 text-yellow-400 text-center">
         About Movie Finder
       </h1>
 
